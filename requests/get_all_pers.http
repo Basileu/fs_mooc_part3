@@ -1,0 +1,24 @@
+# POST http://localhost:3001/api/notes/
+# Content-type: application/json
+
+# {
+#     "content": "Note posted from REST CLIENT"
+# }
+GET http://localhost:3001/api/persons/
+# DELETE http://localhost:3001/api/persons/2
+
+###
+POST http://localhost:3001/api/persons/
+Content-type: application/json
+
+{
+    "name": "Person1",
+    "number": "123456"
+}
+
+# POST http://localhost:3001/api/persons/
+# Content-type: application/json
+
+# {
+#     "content": "Note posted from REST CLIENT"
+# }

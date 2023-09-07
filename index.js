@@ -26,6 +26,36 @@ let persons = [
 
 app.use(express.json())
 
+const generateId = () => {
+    const maxId = 65535;
+
+    const id = Math.floor(Math.random() * maxId)
+    return id;
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    console.log(request.headers)
+    console.log(body.name);
+
+    if (body.name == null) {
+        console.log("null Name");
+        return response.status(400).json({
+            error: 'Name missing'
+        })
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    }
+
+    persons = persons.concat(person)
+
+    response.json(person)
+})
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
