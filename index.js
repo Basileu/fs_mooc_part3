@@ -36,6 +36,17 @@ app.get('/api/info', (request, response) => {
     <br/> ${timestamp}`);
     // response.json(persons)
 })
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number.parseInt(request.params.id)
+
+    const person = persons.find(pers => pers.id == id)
+    if (person) {
+        response.json(person)
+    } else {
+        response.statusMessage = "Status message: id not found";
+        response.status(404).end()
+    }
+})
 
 const PORT = 3001
 app.listen(PORT)
