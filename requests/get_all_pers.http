@@ -12,9 +12,11 @@ POST http://localhost:3001/api/persons/
 Content-type: application/json
 
 {
-    "name": "Person1",
+    "name": "Person2",
     "number": "123456"
 }
+###
+DELETE http://localhost:3001/api/persons/39312
 
 # POST http://localhost:3001/api/persons/
 # Content-type: application/json
