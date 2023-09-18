@@ -1,31 +1,56 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express()
+const cors = require('cors')
 
 let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
+    {
+        "id": 1,
+        "name": "Arto Hellas",
+        "number": "040-123456"
     },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
+    {
+        "id": 2,
+        "name": "Ada Lovelace",
+        "number": "39-44-5323523"
     },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
+    {
+        "id": 3,
+        "name": "Dan Abramov",
+        "number": "12-43-234345"
     },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
+    {
+        "id": 4,
+        "name": "Mary Poppendieck",
+        "number": "39-23-6423122"
     }
 ]
-app.use(morgan('tiny'));
+app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
+
+morgan.token('custom1', function (req, res) {
+    // return req.headers['content-type']
+    return JSON.stringify({
+        url: req.url,
+        "name": req.url,
+        // method: req.method,
+        httpVersion: req.httpVersion
+    })
+})
+morgan.token('body1', (req, res) => {
+    // const body = { ...JSON.parse(res.responseBody) };
+    console.log(res.body);
+    JSON.stringify(res.body)
+
+});
+// app.use(morgan('custom1'));
+// app.use(morgan(':method :url :status :custom1'));
+// app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+// app.use(morgan(':method :status :res[content-length] -=== :response-time ms :res[body]'));
+
+app.use(express.json())
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body1 - :res[content-length]'));
 
 const generateId = () => {
     const maxId = 65535;
@@ -44,7 +69,7 @@ app.post('/api/persons', (request, response) => {
         return response.status(400).json({
             error: 'Name or number missing'
         })
-    } else if (persons.filter(p=>p.name === body.name).length > 0) {
+    } else if (persons.filter(p => p.name === body.name).length > 0) {
         return response.status(400).json({
             error: 'Name must be unique'
         })
