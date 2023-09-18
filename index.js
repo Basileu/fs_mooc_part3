@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const app = express()
 const cors = require('cors')
 
+const Person = require('./models/person');
+
 let persons = [
     {
         "id": 1,
@@ -29,28 +31,10 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('build'))
 
-morgan.token('custom1', function (req, res) {
-    // return req.headers['content-type']
-    return JSON.stringify({
-        url: req.url,
-        "name": req.url,
-        // method: req.method,
-        httpVersion: req.httpVersion
-    })
-})
-morgan.token('body1', (req, res) => {
-    // const body = { ...JSON.parse(res.responseBody) };
-    console.log(res.body);
-    JSON.stringify(res.body)
 
-});
-// app.use(morgan('custom1'));
-// app.use(morgan(':method :url :status :custom1'));
-// app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
-// app.use(morgan(':method :status :res[content-length] -=== :response-time ms :res[body]'));
 
 app.use(express.json())
-app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body1 - :res[content-length]'));
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]'));
 
 const generateId = () => {
     const maxId = 65535;
@@ -59,7 +43,35 @@ const generateId = () => {
     return id;
 }
 
+// app.post('/api/persons', (request, response) => {
+//     const body = request.body
+
+//     // console.log(request.headers)
+//     // console.log(body.name);
+
+//     if (body.name == null || body.number == null) {
+//         return response.status(400).json({
+//             error: 'Name or number missing'
+//         })
+//     } else if (persons.filter(p => p.name === body.name).length > 0) {
+//         return response.status(400).json({
+//             error: 'Name must be unique'
+//         })
+//     }
+
+//     const person = {
+//         name: body.name,
+//         number: body.number,
+//         id: generateId(),
+//     }
+
+//     persons = persons.concat(person)
+
+//     response.json(person)
+// })
+// POST
 app.post('/api/persons', (request, response) => {
+    console.log("POST handler called");
     const body = request.body
 
     // console.log(request.headers)
@@ -75,18 +87,37 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const person = {
-        name: body.name,
-        number: body.number,
-        id: generateId(),
-    }
+    // const person = {
+    //     name: body.name,
+    //     number: body.number,
+    //     id: generateId(),
+    // }
 
-    persons = persons.concat(person)
 
-    response.json(person)
+    // console.log("body.name: ", body.name);
+    // console.log("body.number: ", body.number);
+    const person = new Person(
+        {
+            name: body.name,
+            number: body.number
+        }
+    )
+    // response.json(person)
+    person.save().then((savedPer) => {
+        response.json(savedPer)
+        persons = persons.concat(savedPer)
+
+    })
 })
+
+// GET
+// app.get('/api/persons', (request, response) => {
+//     response.json(persons)
+// })
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.get('/api/info', (request, response) => {
