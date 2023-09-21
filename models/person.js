@@ -3,12 +3,12 @@ mongoose.set('strictQuery', false)
 
 
 // const url = process.env.MONGODB_URI
-const password = ""
+const password = "xyz"
 // DO NOT SAVE YOUR PASSWORD TO GITHUB!!
 // const url =  `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/?retryWrites=true&w=majority`
 // const url = `mongodb+srv://basileu1:${password}@cluster0.kwdxku3.mongodb.net/?retryWrites=true&w=majority1`;
 
-const url = "mongodb+srv://basileul1:${password}@azurecluster0.xomt459.mongodb.net/?retryWrites=true&w=majority";
+const url = `mongodb+srv://basileul1:${password}@azurecluster0.xomt459.mongodb.net/?retryWrites=true&w=majority`;
 
 
 console.log('connecting to', url)
